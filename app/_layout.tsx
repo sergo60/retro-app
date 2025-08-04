@@ -10,8 +10,8 @@ import { useNavigation } from '@react-navigation/native';
 import HomeScreen from './HomeScreen';
 import LoginScreen from './features/auth/screens/LoginScreen';
 import AccountScreen from './features/auth/screens/AccountScreen';
-import RetroScreen from './screens/RetroScreen';
-import FullRetroScreen from './screens/FullRetroScreen';
+import RetroScreen from './features/retros/screens/RetroScreen';
+import FullRetroScreen from './features/retros/screens/FullRetroScreen';
 
 const Stack = createNativeStackNavigator();
 

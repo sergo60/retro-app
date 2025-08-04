@@ -13,10 +13,10 @@ import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { TextInput } from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import RetroCard from '../ui/RetroCard';
-import CustomTextInput from '../ui/CustomTextInput';
-import CustomDateInput from '../ui/CustomDateInput';
-import PrimaryButton from '../ui/PrimaryButton';
+import RetroCard from '../../../ui/RetroCard';
+import CustomTextInput from '../../../ui/CustomTextInput';
+import CustomDateInput from '../../../ui/CustomDateInput';
+import PrimaryButton from '../../../ui/PrimaryButton';
 import {
   collection,
   addDoc,
@@ -30,7 +30,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import { db } from '../../FirebaseConfig';
+import { db } from '../../../../FirebaseConfig';
 
 export default function RetroScreen() {
   const navigation = useNavigation();

@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { doc, setDoc, collection, onSnapshot, updateDoc, currentUser } from 'firebase/firestore';
-import { db } from '../../FirebaseConfig';
-import CustomPostIt from '../ui/CustomPostIt';
-import PrimaryButton from '../ui/PrimaryButton';
+import { db } from '../../../../FirebaseConfig';
+import CustomPostIt from '../../../ui/CustomPostIt';
+import PrimaryButton from '../../../ui/PrimaryButton';
 import { AntDesign } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
 
