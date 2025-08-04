@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -8,112 +8,31 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
-import { doc, setDoc, collection, onSnapshot, updateDoc, currentUser } from 'firebase/firestore';
-import { db } from '../../../../FirebaseConfig';
 import CustomPostIt from '../../../ui/CustomPostIt';
 import PrimaryButton from '../../../ui/PrimaryButton';
 import { AntDesign } from '@expo/vector-icons';
-import { getAuth } from 'firebase/auth';
+import { FullRetroScreenViewModel } from './viewModels/FullRetroScreenViewModel';
 
 const moods = ['😡', '😕', '😐', '🙂', '😄'];
 
 export default function FullRetroScreen() {
-  const route = useRoute();
-  const navigation = useNavigation();
-  const { entry } = route.params;
-
-  const [keep, setKeep] = useState<string[]>([]);
-  const [drop, setDrop] = useState<string[]>([]);
-  const [start, setStart] = useState<string[]>([]);
-  const [mood, setMood] = useState<number | null>(null);
-
-  const [inputValue, setInputValue] = useState('');
-  const [selectedTab, setSelectedTab] = useState<'Keep' | 'Drop' | 'Start'>('Keep');
-  const [authorPseudo, setAuthorPseudo] = useState('');
-
-  const addItem = () => {
-    if (inputValue.trim() === '') return;
-
-    if (selectedTab === 'Keep') setKeep([...keep, inputValue.trim()]);
-    if (selectedTab === 'Drop') setDrop([...drop, inputValue.trim()]);
-    if (selectedTab === 'Start') setStart([...start, inputValue.trim()]);
-
-    setInputValue('');
-  };
-
-  const handleValidate = async () => {
-    try {
-      const retroRef = doc(db, 'retros', entry.id);
-      const detailsDocRef = doc(retroRef, 'fullData', 'details');
-
-      await updateDoc(detailsDocRef, {
-        keep,
-        drop,
-        start,
-        mood,
-      });
-
-      console.log('Données fullRetro mises à jour');
-      navigation.goBack();
-    } catch (err) {
-      if (err.code === 'not-found') {
-        try {
-          const retroRef = doc(db, 'retros', entry.id);
-          const detailsDocRef = doc(retroRef, 'fullData', 'details');
-
-          await setDoc(detailsDocRef, {
-            userId: user.uid,
-            pseudo: user.displayName,
-            keep,
-            drop,
-            start,
-            mood,
-          });
-
-          console.log('Données fullRetro créées (fallback)');
-          navigation.goBack();
-        } catch (error) {
-          console.error('Erreur lors de la création du document :', error);
-        }
-      } else {
-        console.error('Erreur lors de la mise à jour dans Firestore :', err);
-      }
-    }
-  };
-
-  const handleReset = () => {
-    setKeep([]);
-    setDrop([]);
-    setStart([]);
-    setMood(null);
-  };
-
-  const user = getAuth().currentUser;
-
-  useEffect(() => {
-    if (!entry?.id) return;
-
-    const fullDataRef = doc(db, 'retros', entry.id, 'fullData', 'details');
-
-    const unsubscribe = onSnapshot(fullDataRef, docSnap => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-
-        setKeep(data.keep || []);
-        setDrop(data.drop || []);
-        setStart(data.start || []);
-        setMood(data.mood ?? null);
-
-        setAuthorPseudo(user.pseudo || '');
-        console.log('pseudo ' + user.pseudo);
-      } else {
-        console.log('Pas de fullRetro trouvé pour cette rétro');
-      }
-    });
-
-    return unsubscribe;
-  }, [entry?.id]);
+  const {
+      entry,
+      keep,
+      drop,
+      start,
+      mood,
+      inputValue,
+      selectedTab,
+      authorPseudo,
+      setMood,
+      setSelectedTab,
+      setInputValue,
+      handleDeleteItem,
+      addItem,
+      handleValidate,
+      handleReset,
+    } = FullRetroScreenViewModel();
 
   const renderList = (data: string[]) => (
     <FlatList
@@ -123,13 +42,7 @@ export default function FullRetroScreen() {
         <CustomPostIt
           text={item}
           pseudo={authorPseudo}
-          onDelete={() => {
-            const updated = [...data];
-            updated.splice(index, 1);
-            if (selectedTab === 'Keep') setKeep(updated);
-            if (selectedTab === 'Drop') setDrop(updated);
-            if (selectedTab === 'Start') setStart(updated);
-          }}
+          onDelete={() => handleDeleteItem(index)}
         />
       )}
       ListEmptyComponent={<Text style={styles.empty}>Aucun élément pour le moment.</Text>}
