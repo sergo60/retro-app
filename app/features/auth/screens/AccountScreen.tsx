@@ -1,32 +1,21 @@
 import { Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
-import { auth } from '../FirebaseConfig';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { router } from 'expo-router';
-import { useNavigation } from '@react-navigation/native';
-import PrimaryButton from '../app/ui/PrimaryButton';
-import SecondaryButton from '../app/ui/SecondaryButton';
+import PrimaryButton from '../../../ui/PrimaryButton';
+import { LoginScreenViewModel } from './viewModels/LoginScreenViewModel';
 
-export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const navigation = useNavigation();
-
-  const signIn = async () => {
-    try {
-      const user = await signInWithEmailAndPassword(auth, email, password);
-
-      if (user) navigation.navigate('Retro');
-    } catch (error: any) {
-      console.log(error);
-      alert('Sign in failed: ' + error.message);
-    }
-  };
+export default function AccountScreen() {
+  const { pseudo, setPseudo, email, setEmail, password, setPassword, signUp } =
+    useAccountViewModel();
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Créer un compte</Text>
+      <TextInput
+        style={styles.textInput}
+        placeholder="pseudo"
+        value={pseudo}
+        onChangeText={setPseudo}
+      />
       <TextInput
         style={styles.textInput}
         placeholder="email"
@@ -40,7 +29,7 @@ export default function LoginScreen() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <PrimaryButton onPress={signIn} title="Se connecter" />
+      <PrimaryButton onPress={signUp} title="S'enregistrer" />
     </SafeAreaView>
   );
 }
