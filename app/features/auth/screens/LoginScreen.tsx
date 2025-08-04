@@ -1,44 +1,14 @@
 import { Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
-import React, { useState } from 'react';
-import { auth } from '../FirebaseConfig';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { router } from 'expo-router';
-import { useNavigation } from '@react-navigation/native';
-import PrimaryButton from '../app/ui/PrimaryButton';
-import SecondaryButton from '../app/ui/SecondaryButton';
+import React from 'react';
+import PrimaryButton from '../../../ui/PrimaryButton';
+import { LoginScreenViewModel } from './viewModels/LoginScreenViewModel';
 
-export default function AccountScreen() {
-  const [pseudo, setPseudo] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const navigation = useNavigation();
-
-  const signUp = async () => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-
-      await updateProfile(userCredential.user, {
-        displayName: pseudo,
-      });
-      console.log(displayName);
-
-      navigation.navigate('Login');
-    } catch (error: any) {
-      console.log(error);
-      alert('Sign in failed: ' + error.message);
-    }
-  };
+export default function LoginScreen() {
+  const { email, setEmail, password, setPassword, signIn } = LoginScreenViewModel();
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Créer un compte</Text>
-      <TextInput
-        style={styles.textInput}
-        placeholder="pseudo"
-        value={pseudo}
-        onChangeText={setPseudo}
-      />
+      <Text style={styles.title}>Login</Text>
       <TextInput
         style={styles.textInput}
         placeholder="email"
@@ -52,7 +22,7 @@ export default function AccountScreen() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <PrimaryButton onPress={signUp} title="S'enregistrer" />
+      <PrimaryButton onPress={signIn} title="Se connecter" />
     </SafeAreaView>
   );
 }
