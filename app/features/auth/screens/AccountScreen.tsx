@@ -1,11 +1,11 @@
 import { Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
 import React, { useState } from 'react';
 import PrimaryButton from '../../../ui/PrimaryButton';
-import { LoginScreenViewModel } from './viewModels/LoginScreenViewModel';
+import { AccountScreenViewModel } from './viewModels/AccountScreenViewModel';
 
 export default function AccountScreen() {
   const { pseudo, setPseudo, email, setEmail, password, setPassword, signUp } =
-    useAccountViewModel();
+    AccountScreenViewModel();
 
   return (
     <SafeAreaView style={styles.container}>
