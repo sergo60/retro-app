@@ -1,13 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type Mood = number | null;
-
-type RetroDetailsState = {
+interface RetroDetailsState {
   keep: string[];
   drop: string[];
   start: string[];
-  mood: Mood;
-};
+  mood: number | null;
+}
 
 const initialState: RetroDetailsState = {
   keep: [],
@@ -16,52 +14,44 @@ const initialState: RetroDetailsState = {
   mood: null,
 };
 
-export const retroDetailsSlice = createSlice({
+const retroDetailsSlice = createSlice({
   name: 'retroDetails',
   initialState,
   reducers: {
-    addItem: (
-      state,
-      action: PayloadAction<{ tab: 'Keep' | 'Drop' | 'Start'; value: string }>
-    ) => {
-      const { tab, value } = action.payload;
-      if (!value.trim()) return;
-
-      const target = tab.toLowerCase() as keyof RetroDetailsState;
-      state[target].push(value.trim());
+    addItem(state, action: PayloadAction<{ tab: 'Keep' | 'Drop' | 'Start'; value: string }>) {
+      state[action.payload.tab.toLowerCase() as keyof RetroDetailsState].push(action.payload.value);
     },
-    deleteItem: (
-      state,
-      action: PayloadAction<{ tab: 'Keep' | 'Drop' | 'Start'; index: number }>
-    ) => {
-      const { tab, index } = action.payload;
-      const target = tab.toLowerCase() as keyof RetroDetailsState;
-      state[target].splice(index, 1);
+    deleteItem(state, action: PayloadAction<{ tab: 'Keep' | 'Drop' | 'Start'; index: number }>) {
+      state[action.payload.tab.toLowerCase() as keyof RetroDetailsState].splice(
+        action.payload.index,
+        1,
+      );
     },
-    setMood: (state, action: PayloadAction<Mood>) => {
+    setMood(state, action: PayloadAction<number | null>) {
       state.mood = action.payload;
     },
-    resetItems: state => {
+    reset(state) {
       state.keep = [];
       state.drop = [];
       state.start = [];
       state.mood = null;
     },
-    setItemsFromSnapshot: (
+    setInitialData(
       state,
-      action: PayloadAction<Partial<RetroDetailsState>>
-    ) => {
-      Object.assign(state, action.payload);
+      action: PayloadAction<{
+        keep: string[];
+        drop: string[];
+        start: string[];
+        mood: number | null;
+      }>,
+    ) {
+      state.keep = action.payload.keep;
+      state.drop = action.payload.drop;
+      state.start = action.payload.start;
+      state.mood = action.payload.mood;
     },
   },
 });
 
-export const {
-  addItem,
-  deleteItem,
-  setMood,
-  resetItems,
-  setItemsFromSnapshot,
-} = retroDetailsSlice.actions;
-
+export const { addItem, deleteItem, setMood, reset, setInitialData } = retroDetailsSlice.actions;
 export default retroDetailsSlice.reducer;

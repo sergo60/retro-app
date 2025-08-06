@@ -1,18 +1,29 @@
 import { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { doc, setDoc, collection, onSnapshot, updateDoc, currentUser } from 'firebase/firestore';
-import { db } from '../../../../../FirebaseConfig';
+import { doc, setDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { db } from '../../../../../FirebaseConfig';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import {
+  addItem as addItemAction,
+  deleteItem,
+  reset,
+  setMood as setMoodAction,
+  setInitialData,
+} from '../../retroDetailsSlice';
 
 export function FullRetroScreenViewModel() {
   const route = useRoute();
   const navigation = useNavigation();
   const { entry } = route.params as any;
 
-  const [keep, setKeep] = useState<string[]>([]);
-  const [drop, setDrop] = useState<string[]>([]);
-  const [start, setStart] = useState<string[]>([]);
-  const [mood, setMood] = useState<number | null>(null);
+  const dispatch = useAppDispatch();
+
+  const keep = useAppSelector(state => state.retroDetails.keep);
+  const drop = useAppSelector(state => state.retroDetails.drop);
+  const start = useAppSelector(state => state.retroDetails.start);
+  const mood = useAppSelector(state => state.retroDetails.mood);
+
   const [inputValue, setInputValue] = useState('');
   const [selectedTab, setSelectedTab] = useState<'Keep' | 'Drop' | 'Start'>('Keep');
   const [authorPseudo, setAuthorPseudo] = useState('');
@@ -22,24 +33,12 @@ export function FullRetroScreenViewModel() {
   const addItem = () => {
     if (inputValue.trim() === '') return;
 
-    const value = inputValue.trim();
-    if (selectedTab === 'Keep') setKeep(prev => [...prev, value]);
-    if (selectedTab === 'Drop') setDrop(prev => [...prev, value]);
-    if (selectedTab === 'Start') setStart(prev => [...prev, value]);
-
+    dispatch(addItemAction({ tab: selectedTab, value: inputValue.trim() }));
     setInputValue('');
   };
 
   const handleDeleteItem = (index: number) => {
-    const update = (list: string[]) => {
-      const updated = [...list];
-      updated.splice(index, 1);
-      return updated;
-    };
-
-    if (selectedTab === 'Keep') setKeep(update(keep));
-    if (selectedTab === 'Drop') setDrop(update(drop));
-    if (selectedTab === 'Start') setStart(update(start));
+    dispatch(deleteItem({ tab: selectedTab, index }));
   };
 
   const handleValidate = async () => {
@@ -71,23 +70,29 @@ export function FullRetroScreenViewModel() {
   };
 
   const handleReset = () => {
-    setKeep([]);
-    setDrop([]);
-    setStart([]);
-    setMood(null);
+    dispatch(reset());
+  };
+
+  const setMood = (value: number | null) => {
+    dispatch(setMoodAction(value));
   };
 
   useEffect(() => {
     if (!entry?.id) return;
+
     const fullDataRef = doc(db, 'retros', entry.id, 'fullData', 'details');
 
     const unsubscribe = onSnapshot(fullDataRef, docSnap => {
       if (docSnap.exists()) {
         const data = docSnap.data();
-        setKeep(data.keep || []);
-        setDrop(data.drop || []);
-        setStart(data.start || []);
-        setMood(data.mood ?? null);
+        dispatch(
+          setInitialData({
+            keep: data.keep || [],
+            drop: data.drop || [],
+            start: data.start || [],
+            mood: data.mood ?? null,
+          }),
+        );
         setAuthorPseudo(user?.displayName || '');
       }
     });

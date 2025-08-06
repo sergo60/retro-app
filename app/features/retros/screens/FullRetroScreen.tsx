@@ -17,33 +17,29 @@ const moods = ['😡', '😕', '😐', '🙂', '😄'];
 
 export default function FullRetroScreen() {
   const {
-      entry,
-      keep,
-      drop,
-      start,
-      mood,
-      inputValue,
-      selectedTab,
-      authorPseudo,
-      setMood,
-      setSelectedTab,
-      setInputValue,
-      handleDeleteItem,
-      addItem,
-      handleValidate,
-      handleReset,
-    } = FullRetroScreenViewModel();
+    entry,
+    keep,
+    drop,
+    start,
+    mood,
+    inputValue,
+    selectedTab,
+    authorPseudo,
+    setMood,
+    setSelectedTab,
+    setInputValue,
+    handleDeleteItem,
+    addItem,
+    handleValidate,
+    handleReset,
+  } = FullRetroScreenViewModel();
 
   const renderList = (data: string[]) => (
     <FlatList
       data={data}
       keyExtractor={(item, index) => item + index}
       renderItem={({ item, index }) => (
-        <CustomPostIt
-          text={item}
-          pseudo={authorPseudo}
-          onDelete={() => handleDeleteItem(index)}
-        />
+        <CustomPostIt text={item} pseudo={authorPseudo} onDelete={() => handleDeleteItem(index)} />
       )}
       ListEmptyComponent={<Text style={styles.empty}>Aucun élément pour le moment.</Text>}
     />
