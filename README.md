@@ -1,50 +1,34 @@
-# Welcome to your Expo app 👋
+# 📱 Retro App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Retro App est une application mobile de gestion de rétrospectives, pensée pour faciliter le suivi des sessions d’équipe et garder une trace claire des points clés.  
+Elle permet de **créer, modifier, consulter et supprimer** des rétrospectives de manière simple et intuitive.
 
-## Get started
+---
 
-1. Install dependencies
+## 🎯 Objectif
 
-   ```bash
-   npm install
-   ```
+- Centraliser les rétrospectives d’équipe.
+- Avoir un suivi chronologique des retours (grâce aux dates et à l’ordre d’ajout).
+- Encourager la collaboration et l’amélioration continue.
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## ✨ Fonctionnalités
 
-In the output, you'll find options to open the app in a
+- 🔐 **Authentification sécurisée** (via Firebase Auth).
+- 📝 **Création et édition** de rétrospectives (titre, date, description).
+- 📂 **Stockage cloud** avec Firebase Firestore.
+- 📱 **Interface moderne** avec React Native & Expo.
+- ⚡ **Gestion d’état optimisée** avec Redux Toolkit.
+- 🗑️ Suppression et mise à jour en temps réel grâce à Firestore.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 🛠️ Stack technique
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- **React Native** (base de l’application mobile)
+- **Expo** (déploiement et développement simplifié)
+- **Firebase**
+   - Authentification (connexion utilisateur)
+   - Firestore (stockage des rétrospectives)
+- **Redux Toolkit** (gestion d’état global)
